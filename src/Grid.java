@@ -29,15 +29,22 @@ public class Grid {
     *   [null, null, null]
     *   [null, null, null]
     * ]
+    * could also look like
+    * | | | | |
+    * =========
+    * | | | | |
+    * =========
+    * | | | | |
     * */
 
     public void recursiveDFS() {
         System.out.println(isValid(2, 3));
 
         // pass random x y and cell into the private declaration of carvePath
+        this.grid[0][0] = new Cell(0, 0);
     }
 
-    private void recursiveDPS(Cell c, int x, int y) {
+    private void recursiveDFS(Cell c, int x, int y) {
         if (c.getParent() == null && c.getNext().size() > 0) return; // base case; we've returned to the original cell
     }
 
@@ -46,7 +53,24 @@ public class Grid {
         System.out.println(this.grid[y][x]);
     }
 
+    /**
+     * Gets a (random) valid cell (if available) around the cell passed
+     * @param x x value of current
+     * @param y y value of current cell
+     * @return coordinates of valid cell or [-1, -1] if no cell is available
+     */
+    private int[] getValid(int x, int y) {
+        ArrayList<int[]> available = new ArrayList<>();
+        for (int l = -1; l <= 1; l += 2)
+            if (isValid(x+l, y))
+                available.add(new int[]{x+l, y});
+        for (int h = -1; h <= 1; h += 2)
+            if (isValid(x, y+h))
+                available.add(new int[]{x, y+h});
+        return available.get((int)(available.size()*Math.random()));
+    }
+
     private boolean isValid(int x, int y) {
-        return (x < this.width) && (y < this.height) && (this.grid[y][x] == null);
+        return (x >= 0 && x < this.width) && (y >= 0 && y < this.height) && (this.grid[y][x] == null);
     }
 }
