@@ -42,10 +42,20 @@ public class Grid {
 
         // pass random x y and cell into the private declaration of carvePath
         this.grid[0][0] = new Cell(0, 0);
+
+        int[] pos = getValid(0, 0);
+        recursiveDFS(this.grid[0][0], pos[0], pos[1]);
     }
 
     private void recursiveDFS(Cell c, int x, int y) {
-        if (c.getParent() == null && c.getNext().size() > 0) return; // base case; we've returned to the original cell
+        this.grid[x][y] = new Cell(c, x, y);
+
+        int[] newPos = getValid(x, y);
+        while (newPos[0] != -1) {
+            recursiveDFS(this.grid[x][y], newPos[0], newPos[1]);
+            this.grid[x][y].addNext(this.grid[newPos[0]][newPos[1]]);
+            newPos = getValid(x, y);
+        }
     }
 
     public void setCell(Cell parent, int x, int y) {
@@ -67,7 +77,10 @@ public class Grid {
         for (int h = -1; h <= 1; h += 2)
             if (isValid(x, y+h))
                 available.add(new int[]{x, y+h});
-        return available.get((int)(available.size()*Math.random()));
+        if (available.size() > 0)
+            return available.get((int)(available.size()*Math.random()));
+        else
+            return new int[]{-1, -1};
     }
 
     private boolean isValid(int x, int y) {
