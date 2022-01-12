@@ -50,7 +50,7 @@ public class Grid {
 
     public void setCell(Cell parent, int x, int y) {
         this.grid[y][x] = new Cell(parent, x, y);
-        System.out.println(this.grid[y][x]);
+//        System.out.println(this.grid[y][x]);
     }
 
     /**
@@ -60,14 +60,21 @@ public class Grid {
      * @return coordinates of valid cell or [-1, -1] if no cell is available
      */
     private int[] getValid(int x, int y) {
+        ArrayList<int[]> available = allValid(x, y);
+        return available.get((int)(available.size() * Math.random()));
+    }
+
+    private ArrayList<int[]> allValid(int x, int y) {
         ArrayList<int[]> available = new ArrayList<>();
-        for (int l = -1; l <= 1; l += 2)
-            if (isValid(x+l, y))
-                available.add(new int[]{x+l, y});
-        for (int h = -1; h <= 1; h += 2)
+        for (int l = -1; l <= 1; l += 2) {
+            if (isValid(x + l, y))
+                available.add(new int[]{x + l, y});
+        }
+        for (int h = -1; h <= 1; h += 2) {
             if (isValid(x, y+h))
                 available.add(new int[]{x, y+h});
-        return available.get((int)(available.size()*Math.random()));
+        }
+        return available;
     }
 
     private boolean isValid(int x, int y) {
