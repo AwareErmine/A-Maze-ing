@@ -33,13 +33,13 @@ public class Grid {
 
     public void recursiveDFS() {
         // pass random x y and cell into the private declaration of carvePath
-        int x = Utils.getRandomNumber(0, this.grid[0].length);
-        int y = Utils.getRandomNumber(0, this.grid.length);
+        int x = Utils.getRandomNumber(0, this.grid[0].length - 1);
+        int y = Utils.getRandomNumber(0, this.grid.length - 1);
         this.grid[x][y] = new Cell(x, y);
         recursiveDFS(this.grid[x][y]);
     }
 
-//    private void recursiveDFS(Cell c, int x, int y) { // uhh sorry gordon I got a recursion error and rewrote it
+//    private void recursiveDFS(Cell c, int x, int y) { // hm
 //        this.grid[x][y] = new Cell(c, x, y);
 //        int[] newPos = getValid(x, y);
 //        while (newPos[0] != -1) {
@@ -56,13 +56,10 @@ public class Grid {
                 recursiveDFS(c.getParent()); // return this if we ever add a return type
             else {
                 this.grid[next[1]][next[0]] = new Cell(c, next[0], next[1]); // parent is weird
+                c.addNext(this.grid[next[1]][next[0]]);
                 recursiveDFS(this.grid[next[1]][next[0]]); // have to use y x passing in val
             }
         }
-    }
-
-    public void setCell(Cell parent, int x, int y) {
-        this.grid[y][x] = new Cell(parent, x, y);
     }
 
     /**

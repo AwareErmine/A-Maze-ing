@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Cell {
     private Cell parent;
@@ -43,12 +44,6 @@ public class Cell {
 
     @Override
     public String toString() {
-        // default intellij string rn - just for testing, can change
-        return "Cell{" +
-                "parent=" + parent +
-                ", next=" + next +
-                ", x=" + x +
-                ", y=" + y +
-                '}';
+        return String.format("(%s, %s){ %s}", x, y, parent);
     }
 }
