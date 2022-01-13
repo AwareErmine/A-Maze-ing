@@ -8,5 +8,6 @@ public class Main {
         test.setCell(new Cell(), 2, 1);
         System.out.println(test.grid[1][2]);
         test.recursiveDFS();
+        System.out.println(Arrays.deepToString(test.grid));
     }
 }

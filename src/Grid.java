@@ -29,38 +29,40 @@ public class Grid {
     *   [null, null, null]
     *   [null, null, null]
     * ]
-    * could also look like
-    * | | | | |
-    * =========
-    * | | | | |
-    * =========
-    * | | | | |
     * */
 
     public void recursiveDFS() {
-        System.out.println(isValid(2, 3));
-
         // pass random x y and cell into the private declaration of carvePath
-        this.grid[0][0] = new Cell(0, 0);
-
-        int[] pos = getValid(0, 0);
-        recursiveDFS(this.grid[0][0], pos[0], pos[1]);
+        int x = Utils.getRandomNumber(0, this.grid[0].length);
+        int y = Utils.getRandomNumber(0, this.grid.length);
+        this.grid[x][y] = new Cell(x, y);
+        recursiveDFS(this.grid[x][y]);
     }
 
-    private void recursiveDFS(Cell c, int x, int y) {
-        this.grid[x][y] = new Cell(c, x, y);
+//    private void recursiveDFS(Cell c, int x, int y) { // uhh sorry gordon I got a recursion error and rewrote it
+//        this.grid[x][y] = new Cell(c, x, y);
+//        int[] newPos = getValid(x, y);
+//        while (newPos[0] != -1) {
+//            recursiveDFS(this.grid[x][y], newPos[0], newPos[1]);
+//            this.grid[x][y].addNext(this.grid[newPos[0]][newPos[1]]);
+//            newPos = getValid(x, y);
+//        }
+//    }
 
-        int[] newPos = getValid(x, y);
-        while (newPos[0] != -1) {
-            recursiveDFS(this.grid[x][y], newPos[0], newPos[1]);
-            this.grid[x][y].addNext(this.grid[newPos[0]][newPos[1]]);
-            newPos = getValid(x, y);
+    private void recursiveDFS(Cell c) {
+        if (c != null) { // break; we have reached the parent
+            int[] next = getValid(c.getX(), c.getY());
+            if (next[0] == -1)
+                recursiveDFS(c.getParent()); // return this if we ever add a return type
+            else {
+                this.grid[next[1]][next[0]] = new Cell(c, next[0], next[1]); // parent is weird
+                recursiveDFS(this.grid[next[1]][next[0]]); // have to use y x passing in val
+            }
         }
     }
 
     public void setCell(Cell parent, int x, int y) {
         this.grid[y][x] = new Cell(parent, x, y);
-//        System.out.println(this.grid[y][x]);
     }
 
     /**
@@ -71,21 +73,21 @@ public class Grid {
      */
     private int[] getValid(int x, int y) {
         ArrayList<int[]> available = allValid(x, y);
-        return available.get((int)(available.size() * Math.random()));
+        if (available.size() > 0)
+            return available.get((int)(available.size() * Math.random()));
+        else
+            return new int[]{-1, -1};
     }
 
     private ArrayList<int[]> allValid(int x, int y) {
         ArrayList<int[]> available = new ArrayList<>();
-        for (int l = -1; l <= 1; l += 2)
-            if (isValid(x+l, y))
-                available.add(new int[]{x+l, y});
-        for (int h = -1; h <= 1; h += 2)
-            if (isValid(x, y+h))
-                available.add(new int[]{x, y+h});
-        if (available.size() > 0)
-            return available.get((int)(available.size()*Math.random()));
-        else
-            return new int[]{-1, -1};
+        for (int l = -1; l <= 1; l += 2) {
+            if (isValid(x + l, y))
+                available.add(new int[]{x + l, y});
+        }
+        for (int h = -1; h <= 1; h += 2) {
+            if (isValid(x, y + h))
+                available.add(new int[]{x, y + h});
         }
         return available;
     }
