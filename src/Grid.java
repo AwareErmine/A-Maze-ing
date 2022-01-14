@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Grid {
     // Check what cells are visitable
@@ -16,15 +17,14 @@ public class Grid {
 
     public void printGrid() {
         Cell[] row;
-        System.out.println();
-        for (int r = 0; r < this.grid.length; r++) {
+        for (int r = 0; r < this.height; r++) {
             System.out.print("|");
             row = this.grid[r];
-            for (int i = 0; i < row.length - 1; i++) {
+            for (int i = 0; i < this.width - 1; i++) {
                 if (row[i].getNext().contains(row[i + 1]))
                     System.out.print("    ");
-                else if (r != this.grid.length - 1 && i != row.length - 2 && row[i].getNext().contains(this.grid[r + 1][i]))
-                    System.out.print("   |");
+                else if (r != this.height - 1 && row[i].getNext().contains(this.grid[r + 1][i]))
+                    System.out.print((i != this.width - 2) ? "   |" : "    ");
                 else
                     System.out.print("____");
             }
@@ -51,8 +51,8 @@ public class Grid {
 
     public void recursiveDFS() {
         // pass random x y and cell into the private declaration of carvePath
-        int x = Utils.getRandomNumber(0, this.grid[0].length - 1);
-        int y = Utils.getRandomNumber(0, this.grid.length - 1);
+        int x = Utils.getRandomNumber(0, this.width - 1);
+        int y = Utils.getRandomNumber(0, this.height - 1);
         this.grid[x][y] = new Cell(x, y);
         recursiveDFS(this.grid[x][y]);
     }
@@ -70,9 +70,12 @@ public class Grid {
     private void recursiveDFS(Cell c) {
         if (c != null) { // break; we have reached the parent
             int[] next = getValid(c.getX(), c.getY());
-            if (next[0] == -1)
+            if (next[0] == -1) {
+                if (c.getParent() != null) System.out.printf("going back to [%s, %s]\n", c.getParent().getX(), c.getParent().getY());
                 recursiveDFS(c.getParent()); // return this if we ever add a return type
+            }
             else {
+                System.out.println(Arrays.toString(next));
                 this.grid[next[1]][next[0]] = new Cell(c, next[0], next[1]); // parent is weird
                 c.addNext(this.grid[next[1]][next[0]]);
                 recursiveDFS(this.grid[next[1]][next[0]]); // have to use y x passing in val
