@@ -14,6 +14,24 @@ public class Grid {
         this.width = width;
     }
 
+    public void printGrid() {
+        Cell[] row;
+        System.out.println();
+        for (int r = 0; r < this.grid.length; r++) {
+            System.out.print("|");
+            row = this.grid[r];
+            for (int i = 0; i < row.length - 1; i++) {
+                if (row[i].getNext().contains(row[i + 1]))
+                    System.out.print("    ");
+                else if (r != this.grid.length - 1 && i != row.length - 2 && row[i].getNext().contains(this.grid[r + 1][i]))
+                    System.out.print("   |");
+                else
+                    System.out.print("____");
+            }
+            System.out.println("|");
+        }
+    }
+
     // Carve path from thing
         // Current cell is the starting cell? Stop
         // Can we travel in a direction
