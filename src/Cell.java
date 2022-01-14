@@ -44,6 +44,7 @@ public class Cell {
 
     @Override
     public String toString() {
-        return String.format("(%s, %s){ %s}", x, y, parent);
+//        return String.format("(%s, %s){ %s }", x, y, parent);
+        return String.format("(%s, %s)", x, y);
     }
 }

@@ -7,7 +7,7 @@ public class Grid {
     // Generate the actual, 2-d array (coordinates)
 
     Cell[][] grid;
-    private int width, height;
+    private final int width, height;
 
     public Grid(int width, int height) {
         this.grid = new Cell[height][width];
@@ -17,16 +17,21 @@ public class Grid {
 
     public void printGrid() {
         Cell[] row;
+        boolean containsNextX, containsBelowY;
         for (int r = 0; r < this.height; r++) {
             System.out.print("|");
             row = this.grid[r];
             for (int i = 0; i < this.width - 1; i++) {
-                if (row[i].getNext().contains(row[i + 1]))
+                containsBelowY = (r != this.height - 1) && row[i].getNext().contains(this.grid[r + 1][i]);
+                containsNextX = row[i].getNext().contains(row[i + 1]);
+                if (containsNextX && containsBelowY)
                     System.out.print("    ");
-                else if (r != this.height - 1 && row[i].getNext().contains(this.grid[r + 1][i]))
+                else if (containsNextX)
+                    System.out.print("____");
+                else if (containsBelowY)
                     System.out.print((i != this.width - 2) ? "   |" : "    ");
                 else
-                    System.out.print("____");
+                    System.out.print("????");
             }
             System.out.println("|");
         }
@@ -53,29 +58,22 @@ public class Grid {
         // pass random x y and cell into the private declaration of carvePath
         int x = Utils.getRandomNumber(0, this.width - 1);
         int y = Utils.getRandomNumber(0, this.height - 1);
-        this.grid[x][y] = new Cell(x, y);
-        recursiveDFS(this.grid[x][y]);
+        this.grid[y][x] = new Cell(x, y);
+//        System.out.printf("Starting cell: [%s, %s]\n", x, y);
+        recursiveDFS(this.grid[y][x]);
     }
-
-//    private void recursiveDFS(Cell c, int x, int y) { // hm
-//        this.grid[x][y] = new Cell(c, x, y);
-//        int[] newPos = getValid(x, y);
-//        while (newPos[0] != -1) {
-//            recursiveDFS(this.grid[x][y], newPos[0], newPos[1]);
-//            this.grid[x][y].addNext(this.grid[newPos[0]][newPos[1]]);
-//            newPos = getValid(x, y);
-//        }
-//    }
 
     private void recursiveDFS(Cell c) {
         if (c != null) { // break; we have reached the parent
             int[] next = getValid(c.getX(), c.getY());
             if (next[0] == -1) {
-                if (c.getParent() != null) System.out.printf("going back to [%s, %s]\n", c.getParent().getX(), c.getParent().getY());
+//                if (c.getParent() != null) System.out.printf("going back to [%s, %s]\n", c.getParent().getX(), c.getParent().getY());
+//                System.out.println("---------------");
                 recursiveDFS(c.getParent()); // return this if we ever add a return type
             }
             else {
-                System.out.println(Arrays.toString(next));
+//                System.out.println("Next: " + Arrays.toString(next));
+//                System.out.println("---------------");
                 this.grid[next[1]][next[0]] = new Cell(c, next[0], next[1]); // parent is weird
                 c.addNext(this.grid[next[1]][next[0]]);
                 recursiveDFS(this.grid[next[1]][next[0]]); // have to use y x passing in val
@@ -91,11 +89,28 @@ public class Grid {
      */
     private int[] getValid(int x, int y) {
         ArrayList<int[]> available = allValid(x, y);
+//        System.out.println("Available:");
+//        for (int[] a : available) {
+//            System.out.println("\t" + Arrays.toString(a));
+//        }
         if (available.size() > 0)
-            return available.get((int)(available.size() * Math.random()));
+            return available.get(Utils.getRandomNumber(0, available.size() - 1));
         else
             return new int[]{-1, -1};
     }
+
+//    private ArrayList<int[]> allValid(int x, int y) {
+//        ArrayList<int[]> available = new ArrayList<>();
+//        for (int l = -1; l <= 1; l += 2) {
+//            if (isValid(x + l, y))
+//                available.add(new int[]{x + l, y});
+//        }
+//        for (int h = -1; h <= 1; h += 2) {
+//            if (isValid(x, y + h))
+//                available.add(new int[]{x, y + h});
+//        }
+//        return available;
+//    }
 
     private ArrayList<int[]> allValid(int x, int y) {
         ArrayList<int[]> available = new ArrayList<>();
