@@ -18,23 +18,29 @@ public class Grid {
     public void printGrid() {
         Cell[] row;
         boolean containsNextX, containsBelowY;
+        StringBuilder output = new StringBuilder();
+        for (int i = 0; i < this.width; i++) {
+            output.append("___");
+        }
+        output.append("_\n");
         for (int r = 0; r < this.height; r++) {
-            System.out.print("|");
+            output.append("|");
             row = this.grid[r];
             for (int i = 0; i < this.width; i++) {
                 containsBelowY = (row[i] != null) && (r != this.height - 1) && row[i].getNext().contains(this.grid[r + 1][i]);
                 containsNextX = (row[i] != null) && (i != this.width - 1) && row[i].getNext().contains(row[i + 1]);
                 if (containsNextX && containsBelowY)
-                    System.out.print("   ");
+                    output.append("   ");
                 else if (containsNextX)
-                    System.out.print("___");
+                    output.append("___");
                 else if (containsBelowY)
-                    System.out.print((i != this.width - 1) ? "  |" : "   ");
+                    output.append((i != this.width - 1) ? "  |" : "  ");
                 else
-                    System.out.print((i != this.width - 1) ? "__|" : "___");
+                    output.append((i != this.width - 1) ? "__|" : "__");
             }
-            System.out.println("|");
+            output.append("|\n");
         }
+        System.out.print(output);
     }
 
     // Carve path from thing
@@ -69,17 +75,18 @@ public class Grid {
             this.grid[newPos[1]][newPos[0]] = new Cell(newPos[0], newPos[1]);
 
             // add the cells to the next for each other
-            this.grid[newPos[1]][newPos[0]].addNext(c);
             c.addNext(this.grid[newPos[1]][newPos[0]]);
+            this.grid[newPos[1]][newPos[0]].addNext(c);
 
-            System.out.println(c + "" + c.getNext() + " --> " + Arrays.toString(newPos));
+//            System.out.println(c + "" + c.getNext() + " --> " + Arrays.toString(newPos));
+//            System.out.println(this.grid[newPos[1]][newPos[0]] + "" + this.grid[newPos[1]][newPos[0]].getNext());
             recursiveDFS(this.grid[newPos[1]][newPos[0]]);
 
-            newPos = getValid(newPos[0], newPos[1]);
+            newPos = getValid(c.getX(), c.getY());
         }
 
-        this.printGrid();
-        System.out.println(c + "\n");
+//        this.printGrid();
+//        System.out.println(c + "\n");
     }
 
     /**
@@ -98,13 +105,11 @@ public class Grid {
 
     private ArrayList<int[]> allValid(int x, int y) {
         ArrayList<int[]> available = new ArrayList<>();
-        for (int l = -1; l <= 1; l += 2) {
-            if (isValid(x + l, y))
-                available.add(new int[]{x + l, y});
-        }
-        for (int h = -1; h <= 1; h += 2) {
-            if (isValid(x, y + h))
-                available.add(new int[]{x, y + h});
+        for (int i = -1; i <= 1; i += 2) {
+            if (isValid(x, y + i))
+                available.add(new int[]{x, y + i});
+            if (isValid(x + i, y))
+                available.add(new int[]{x + i, y});
         }
         return available;
     }
