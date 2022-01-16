@@ -1,11 +1,6 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Grid {
-    // Check what cells are visitable
-    // Actual algorithm
-    // Generate the actual, 2-d array (coordinates)
-
     Cell[][] grid;
     private final int width, height;
 
@@ -27,6 +22,7 @@ public class Grid {
             output.append("|");
             row = this.grid[r];
             for (int i = 0; i < this.width; i++) {
+                // check for empty cell, ends, and whether it should be connected
                 containsBelowY = (row[i] != null) && (r != this.height - 1) && row[i].getNext().contains(this.grid[r + 1][i]);
                 containsNextX = (row[i] != null) && (i != this.width - 1) && row[i].getNext().contains(row[i + 1]);
                 if (containsNextX && containsBelowY)
@@ -34,7 +30,7 @@ public class Grid {
                 else if (containsNextX)
                     output.append("___");
                 else if (containsBelowY)
-                    output.append((i != this.width - 1) ? "  |" : "  ");
+                    output.append((i != this.width - 1) ? "  |" : "  "); // don't add a second wall @ the ends
                 else
                     output.append((i != this.width - 1) ? "__|" : "__");
             }
@@ -43,29 +39,11 @@ public class Grid {
         System.out.print(output);
     }
 
-    // Carve path from thing
-        // Current cell is the starting cell? Stop
-        // Can we travel in a direction
-            // Yes? Pick random of the directions we can travel in (here implies that direction hasn't been in path already)
-                // Link cell, keep carving from that cell
-                // Add new cell into where it is in the grid
-            // No? Go back along path, continue carving from last cell (call method again from last cell)
-
-    /* Grid looks like
-    * [
-    *   [null, null, null]
-    *   [null, null, null]
-    *   [null, null, null]
-    *   [null, null, null]
-    * ]
-    * */
-
     public void recursiveDFS() {
         // pass random x y and cell into the private declaration
         int x = Utils.getRandomNumber(0, this.width - 1);
         int y = Utils.getRandomNumber(0, this.height - 1);
         this.grid[y][x] = new Cell(x, y);
-//        System.out.printf("Starting cell: [%s, %s]\n", x, y);
         recursiveDFS(this.grid[y][x]);
     }
 
@@ -78,15 +56,10 @@ public class Grid {
             c.addNext(this.grid[newPos[1]][newPos[0]]);
             this.grid[newPos[1]][newPos[0]].addNext(c);
 
-//            System.out.println(c + "" + c.getNext() + " --> " + Arrays.toString(newPos));
-//            System.out.println(this.grid[newPos[1]][newPos[0]] + "" + this.grid[newPos[1]][newPos[0]].getNext());
             recursiveDFS(this.grid[newPos[1]][newPos[0]]);
 
             newPos = getValid(c.getX(), c.getY());
         }
-
-//        this.printGrid();
-//        System.out.println(c + "\n");
     }
 
     /**

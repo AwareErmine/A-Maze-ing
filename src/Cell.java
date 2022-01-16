@@ -4,10 +4,6 @@ public class Cell {
     private ArrayList<Cell> next;
     private int x, y;
 
-    public Cell() {
-        this.next = new ArrayList<Cell>();
-    }
-
     public Cell(int x, int y) {
         this.next = new ArrayList<Cell>();
         this.x = x;

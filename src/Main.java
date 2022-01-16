@@ -1,19 +1,7 @@
 public class Main {
     public static void main(String[] args) {
-        Grid test = new Grid(10, 10);
-
+        Grid test = new Grid(20, 20);
         test.recursiveDFS();
-
-//        for (Cell[] row : test.grid) {
-//            for (Cell c : row) {
-//                System.out.print(c + "" + c.getNext() + "    ");
-//            }
-//            System.out.println();
-//        }
-
-//        System.out.println(Arrays.deepToString(test.grid));
-//        System.out.println();
-
         test.printGrid();
     }
 }
