@@ -1,7 +1,8 @@
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Grid {
-    Cell[][] grid;
+    private Cell[][] grid;
     private final int width, height;
 
     public Grid(int width, int height) {
@@ -14,17 +15,15 @@ public class Grid {
         Cell[] row;
         boolean containsNextX, containsBelowY;
         StringBuilder output = new StringBuilder();
-        for (int i = 0; i < this.width; i++) {
-            output.append("___");
-        }
-        output.append("_\n");
+        output.append("___".repeat(Math.max(0, this.width))).append("_\n");
         for (int r = 0; r < this.height; r++) {
-            output.append("|");
             row = this.grid[r];
+            output.append("|");
             for (int i = 0; i < this.width; i++) {
                 // check for empty cell, ends, and whether it should be connected
                 containsBelowY = (row[i] != null) && (r != this.height - 1) && row[i].getNext().contains(this.grid[r + 1][i]);
                 containsNextX = (row[i] != null) && (i != this.width - 1) && row[i].getNext().contains(row[i + 1]);
+
                 if (containsNextX && containsBelowY)
                     output.append("   ");
                 else if (containsNextX)
@@ -41,8 +40,8 @@ public class Grid {
 
     public void recursiveDFS() {
         // pass random x y and cell into the private declaration
-        int x = Utils.getRandomNumber(0, this.width - 1);
-        int y = Utils.getRandomNumber(0, this.height - 1);
+        int x = ThreadLocalRandom.current().nextInt(0, this.width);
+        int y = ThreadLocalRandom.current().nextInt(0, this.height);
         this.grid[y][x] = new Cell(x, y);
         recursiveDFS(this.grid[y][x]);
     }
@@ -71,7 +70,7 @@ public class Grid {
     private int[] getValid(int x, int y) {
         ArrayList<int[]> available = allValid(x, y);
         if (available.size() > 0)
-            return available.get(Utils.getRandomNumber(0, available.size() - 1));
+            return available.get(ThreadLocalRandom.current().nextInt(0, available.size()));
         else
             return new int[]{-1, -1};
     }
