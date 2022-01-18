@@ -17,6 +17,12 @@ public class Main {
 //    }
 
     public static void main(String[] args) throws Exception{
+        mutateGridHii(15);
         Draw.init(args);
+    }
+
+    public static void mutateGridHii(int i) {
+        Grid.addToHii(i);
+        System.out.println(Grid.getHii());
     }
 }

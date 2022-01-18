@@ -3,12 +3,15 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Grid {
     private Cell[][] grid;
-    private final int width, height;
+    private int width, height;
 
-    public Cell[][] getGrid() {
-        return grid;
-    }
+    private static String hii = "hi";
 
+    /**
+     * Stores a 2-d array representing a maze generated at a random cell
+     * @param width the length of each array stored in grid
+     * @param height the number of arrays of the width in the grid
+     */
     public Grid(int width, int height) {
         this.grid = new Cell[height][width];
         this.height = height;
@@ -16,6 +19,22 @@ public class Grid {
         recursiveDFS();
     }
 
+    /**
+     * Stores a 2-d array representing a maze generated started at a given cell
+     * @param width the length of each array stored in grid
+     * @param height the number of arrays of the width in the grid
+     * @param start a {@link Cell Cell} to start
+     */
+    public Grid(int width, int height, Cell start) {
+        this.grid = new Cell[height][width];
+        this.height = height;
+        this.width = width;
+        recursiveDFS(start);
+    }
+
+    /**
+     * Prints out an ascii representation of grid
+     */
     public void printGrid() {
         Cell[] row;
         boolean containsNextX, containsBelowY;
@@ -43,7 +62,10 @@ public class Grid {
         System.out.print(output);
     }
 
-    public void recursiveDFS() {
+    /**
+     * Stores a maze in grid using Recursive Depth-First Search, starting from a random location
+     */
+    private void recursiveDFS() {
         // pass random x y and cell into the private declaration
         int x = ThreadLocalRandom.current().nextInt(0, this.width);
         int y = ThreadLocalRandom.current().nextInt(0, this.height);
@@ -51,25 +73,31 @@ public class Grid {
         recursiveDFS(this.grid[y][x]);
     }
 
+    /**
+     * Seeds grid with cells linking to each other
+     * @param c a {@link Cell Cell} object to start linking from
+     */
     private void recursiveDFS(Cell c) {
         int[] newPos = getValid(c.getX(), c.getY());
-        while (newPos[0] != -1) {
+        while (newPos[0] != -1) { // when there are no cells available next to a cell
+            // Set the cell at the coordinates to a cell with the given coordinates
             this.grid[newPos[1]][newPos[0]] = new Cell(newPos[0], newPos[1]);
 
-            // add the cells to the next for each other
+            // add the cells to the next arrays for each other
             c.addNext(this.grid[newPos[1]][newPos[0]]);
             this.grid[newPos[1]][newPos[0]].addNext(c);
 
-            recursiveDFS(this.grid[newPos[1]][newPos[0]]);
+            // continue linking from whatever cells are possible from the new position
+            recursiveDFS(this.grid[newPos[1]][newPos[0]]); // base case: when we're cornered and there's nowhere left to go
 
-            newPos = getValid(c.getX(), c.getY());
+            newPos = getValid(c.getX(), c.getY()); // check the other valid cells nearby the cell passed into the function
         }
     }
 
     /**
-     * Gets a (random) valid cell (if available) around the cell passed
-     * @param x x value of current
-     * @param y y value of current cell
+     * Returns a (random) valid cell (if available) around the cell passed
+     * @param x x value of cell
+     * @param y y value of cell
      * @return coordinates of valid cell or [-1, -1] if no cell is available
      */
     private int[] getValid(int x, int y) {
@@ -80,6 +108,12 @@ public class Grid {
             return new int[]{-1, -1};
     }
 
+    /**
+     * Returns the x and y coordinates of every cell adjacent to given x and y coordinates that can be moved to
+     * @param x x value of cell
+     * @param y y value of cell
+     * @return an integer array of the coordinates of all the valid cells adjacent to a cell
+     */
     private ArrayList<int[]> allValid(int x, int y) {
         ArrayList<int[]> available = new ArrayList<>();
         for (int i = -1; i <= 1; i += 2) {
@@ -91,7 +125,39 @@ public class Grid {
         return available;
     }
 
+    /**
+     * Returns whether the cell at given x and y coordinates can be moved to
+     * A cell can be moved to if it's within the bounds of the maze and hasn't already been travelled to
+     * @param x x value of cell
+     * @param y y value of cell
+     * @return true if the cell can be moved to, false if it can't be
+     */
     private boolean isValid(int x, int y) {
         return (x >= 0 && x < this.width) && (y >= 0 && y < this.height) && (this.grid[y][x] == null);
+    }
+
+    public Cell[][] getGrid() {
+        return grid;
+    }
+    public int getHeight() {
+        return height;
+    }
+    public int getWidth() {
+        return width;
+    }
+    public static String getHii() {
+        return hii;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+    public void setWidth(int width) {
+        this.width = width;
+    }
+    public static void addToHii(int i) {
+        for (int j = 0; j < i; j++) {
+            hii += "i";
+        }
     }
 }

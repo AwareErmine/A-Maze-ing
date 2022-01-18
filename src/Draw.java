@@ -45,7 +45,7 @@ public class Draw extends Application {
 
         VBox v = new VBox(title, buttons);
         v.setAlignment(Pos.TOP_CENTER);
-        Scene s = new Scene(v, 200, 100);
+        Scene s = new Scene(v, 500, 500);
         stage.setScene(s);
         stage.show();
     }
