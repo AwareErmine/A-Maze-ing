@@ -33,10 +33,10 @@ public class Draw extends Application {
         title.setFont(Font.font("Arial", FontWeight.BOLD, 22));
 
         final TextField width = new TextField();
-        width.setPromptText("enter desired maze width");
+        width.setPromptText("enter maze width");
 
         final TextField height = new TextField();
-        height.setPromptText("enter desired maze height");
+        height.setPromptText("enter maze height");
 
         Button startButton = new Button("Start");
         startButton.setOnAction(event -> {
