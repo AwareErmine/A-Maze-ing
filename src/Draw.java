@@ -1,5 +1,6 @@
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -31,6 +32,7 @@ public class Draw extends Application {
     public static void startMenu(Stage stage) {
         Text title = new Text("Get Mazed!");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 22));
+//        title.setFont(Font.loadFont("https://fonts.googleapis.com/css2?family=Rubik+Beastly&display=swap", 22));
 
         final TextField width = new TextField();
         width.setPromptText("enter maze width");
@@ -40,15 +42,15 @@ public class Draw extends Application {
 
         Button startButton = new Button("Start");
         startButton.setOnAction(event -> {
-            int w = 25; // TODO: make text valid and user input handled by a separate class (maybe)
-            int h = 25;
+            int w = 15;
+            int h = 15;
             if (width.getText() != null && !width.getText().isEmpty()) {
                 w = Integer.parseInt(width.getText().replaceAll("[\\D]", ""));
-                w = (w < 3 || Math.abs(w - h) > 15 ? 25 : w);
+                w = (w < 3 ? 15 : w);
             }
             if (height.getText() != null && !height.getText().isEmpty()) {
                 h = Integer.parseInt(height.getText().replaceAll("[\\D]", ""));
-                h = (h < 3 || Math.abs(w - h) > 15 ? 25 : h);
+                h = (h < 3 ? 15 : h);
             }
             Grid currentMaze = new Grid(w, h);
             gameMenu(stage, currentMaze);
@@ -59,16 +61,16 @@ public class Draw extends Application {
             stage.close();
         });
 
-        HBox buttons = new HBox(startButton, quitButton);
+        HBox buttons = new HBox(5, startButton, quitButton);
         buttons.setAlignment(Pos.BOTTOM_CENTER);
 
-        HBox inputs = new HBox(width, height);
+        HBox inputs = new HBox(5, width, height);
         inputs.setAlignment(Pos.BOTTOM_CENTER);
 
-        VBox v = new VBox(title, buttons, inputs);
-        v.setAlignment(Pos.TOP_CENTER);
+        VBox v = new VBox(5, title, buttons, inputs);
+        v.setAlignment(Pos.CENTER);
 
-        Scene s = new Scene(v, 500, 500);
+        Scene s = new Scene(v, 550, 300);
         stage.setScene(s);
         stage.show();
     }
@@ -77,9 +79,10 @@ public class Draw extends Application {
         Text title = new Text("Get Mazed!");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 22));
 
-        Canvas maze = drawMaze(currentMaze, 500, 500);
-        VBox v = new VBox(title, maze);
+        Canvas maze = drawMaze(currentMaze, currentMaze.getHeight() * 25, currentMaze.getWidth() * 25);
+        VBox v = new VBox(7, title, maze);
         v.setAlignment(Pos.CENTER);
+        v.setPadding(new Insets(25));
         Scene s = new Scene(v);
         stage.setScene(s);
         stage.show();
@@ -110,8 +113,8 @@ public class Draw extends Application {
         g.strokeLine(0, 0, 0, length);
 
         boolean containsNextX, containsBelowY;
-        final int cellWidth = width/grid[0].length;
-        final int cellLength = length/grid.length;
+        final int cellWidth =  25; //width/grid[0].length;
+        final int cellLength = 25; //length/grid.length;
         for (int row = 0; row < grid.length; row++) {
             for (int col = 0; col < grid[row].length; col++) {
                 // check for empty cell, ends, and whether it should be connected
