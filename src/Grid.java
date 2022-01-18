@@ -3,7 +3,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Grid {
     private Cell[][] grid;
-    private int width, height;
+    private final int width, height;
+    private int[] current; // position of user
+    private int[] finish; // goal of user
 
     /**
      * Stores a 2-d array representing a maze generated at a random cell
@@ -15,6 +17,9 @@ public class Grid {
         this.height = height;
         this.width = width;
         recursiveDFS();
+        int x = ThreadLocalRandom.current().nextInt(0, this.width);
+        int y = ThreadLocalRandom.current().nextInt(0, this.height);
+        finish = new int[]{x, y};
     }
 
     /**
@@ -68,6 +73,7 @@ public class Grid {
         int x = ThreadLocalRandom.current().nextInt(0, this.width);
         int y = ThreadLocalRandom.current().nextInt(0, this.height);
         this.grid[y][x] = new Cell(x, y);
+        current = new int[]{x, y};
         recursiveDFS(this.grid[y][x]);
     }
 
@@ -144,10 +150,40 @@ public class Grid {
         return width;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
+    public void move(char direction) {
+        System.out.println("called");
+        switch (direction) {
+            case 'u':
+                if (grid[current[1]][current[0]].getNext().contains(grid[current[1]-1][current[0]])) {
+                    current[1] -= 1;
+                    System.out.println("up");
+                }
+                break;
+            case 'd':
+                if (grid[current[1]][current[0]].getNext().contains(grid[current[1]+1][current[0]])) {
+                    current[1] += 1;
+                    System.out.println("down");
+                }
+                break;
+            case 'l':
+                if (grid[current[1]][current[0]].getNext().contains(grid[current[1]][current[0]-1])) {
+                    current[0] -= 1;
+                    System.out.println("left");
+                }
+                break;
+            case 'r':
+                if (grid[current[1]][current[0]].getNext().contains(grid[current[1]][current[0]+1])) {
+                    current[0] += 1;
+                    System.out.println("right");
+                }
+                break;
+        }
     }
-    public void setWidth(int width) {
-        this.width = width;
+
+    public int[] getPos() {
+        return current;
+    }
+    public int[] getFinish() {
+        return finish;
     }
 }
