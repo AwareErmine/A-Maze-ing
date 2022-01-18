@@ -5,10 +5,15 @@ public class Grid {
     private Cell[][] grid;
     private final int width, height;
 
+    public Cell[][] getGrid() {
+        return grid;
+    }
+
     public Grid(int width, int height) {
         this.grid = new Cell[height][width];
         this.height = height;
         this.width = width;
+        recursiveDFS();
     }
 
     public void printGrid() {
