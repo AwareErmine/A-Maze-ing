@@ -5,8 +5,6 @@ public class Grid {
     private Cell[][] grid;
     private int width, height;
 
-    private static String hii = "hi";
-
     /**
      * Stores a 2-d array representing a maze generated at a random cell
      * @param width the length of each array stored in grid
@@ -145,19 +143,11 @@ public class Grid {
     public int getWidth() {
         return width;
     }
-    public static String getHii() {
-        return hii;
-    }
 
     public void setHeight(int height) {
         this.height = height;
     }
     public void setWidth(int width) {
         this.width = width;
-    }
-    public static void addToHii(int i) {
-        for (int j = 0; j < i; j++) {
-            hii += "i";
-        }
     }
 }

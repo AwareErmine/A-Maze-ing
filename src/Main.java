@@ -17,12 +17,12 @@ public class Main {
 //    }
 
     public static void main(String[] args) throws Exception{
-        mutateGridHii(15);
+        mutateHii(15);
         Draw.init(args);
     }
 
-    public static void mutateGridHii(int i) {
-        Grid.addToHii(i);
-        System.out.println(Grid.getHii());
+    public static void mutateHii(int i) {
+        Hii.addToHii(i);
+        System.out.println(Hii.getHii());
     }
 }
