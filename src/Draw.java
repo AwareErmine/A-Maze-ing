@@ -7,6 +7,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -23,7 +25,6 @@ public class Draw extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Get Mazed");
-
         startMenu(primaryStage);
     }
 
@@ -31,9 +32,25 @@ public class Draw extends Application {
         Text title = new Text("Get Mazed!");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 22));
 
+        final TextField width = new TextField();
+        width.setPromptText("enter desired maze width");
+
+        final TextField height = new TextField();
+        height.setPromptText("enter desired maze height");
+
         Button startButton = new Button("Start");
         startButton.setOnAction(event -> {
-            Grid currentMaze = new Grid(25, 25);
+            int w = 25; // TODO: make text valid and user input handled by a separate class (maybe)
+            int h = 25;
+            if (width.getText() != null && !width.getText().isEmpty()) {
+                w = Integer.parseInt(width.getText().replaceAll("[\\D]", ""));
+                w = (w < 3 || Math.abs(w - h) > 15 ? 25 : w);
+            }
+            if (height.getText() != null && !height.getText().isEmpty()) {
+                h = Integer.parseInt(height.getText().replaceAll("[\\D]", ""));
+                h = (h < 3 || Math.abs(w - h) > 15 ? 25 : h);
+            }
+            Grid currentMaze = new Grid(w, h);
             gameMenu(stage, currentMaze);
         });
 
@@ -45,8 +62,12 @@ public class Draw extends Application {
         HBox buttons = new HBox(startButton, quitButton);
         buttons.setAlignment(Pos.BOTTOM_CENTER);
 
-        VBox v = new VBox(title, buttons);
+        HBox inputs = new HBox(width, height);
+        inputs.setAlignment(Pos.BOTTOM_CENTER);
+
+        VBox v = new VBox(title, buttons, inputs);
         v.setAlignment(Pos.TOP_CENTER);
+
         Scene s = new Scene(v, 500, 500);
         stage.setScene(s);
         stage.show();
