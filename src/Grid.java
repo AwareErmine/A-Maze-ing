@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Grid {
@@ -16,10 +17,8 @@ public class Grid {
         this.grid = new Cell[height][width];
         this.height = height;
         this.width = width;
-        recursiveDFS();
-        int x = ThreadLocalRandom.current().nextInt(0, this.width);
-        int y = ThreadLocalRandom.current().nextInt(0, this.height);
-        finish = new int[]{x, y};
+        recursiveDFS(); // TODO: This should have only been a temporary arrangement...
+        finish = randomCoords();
     }
 
     /**
@@ -32,7 +31,8 @@ public class Grid {
         this.grid = new Cell[height][width];
         this.height = height;
         this.width = width;
-        recursiveDFS(start);
+        recursiveDFS(start); // TODO: See other todo :/
+        finish = randomCoords();
     }
 
     /**
@@ -129,27 +129,6 @@ public class Grid {
         return available;
     }
 
-    /**
-     * Returns whether the cell at given x and y coordinates can be moved to
-     * A cell can be moved to if it's within the bounds of the maze and hasn't already been travelled to
-     * @param x x value of cell
-     * @param y y value of cell
-     * @return true if the cell can be moved to, false if it can't be
-     */
-    private boolean isValid(int x, int y) {
-        return (x >= 0 && x < this.width) && (y >= 0 && y < this.height) && (this.grid[y][x] == null);
-    }
-
-    public Cell[][] getGrid() {
-        return grid;
-    }
-    public int getHeight() {
-        return height;
-    }
-    public int getWidth() {
-        return width;
-    }
-
     public void move(char direction) {
         System.out.println("called");
         switch (direction) {
@@ -178,8 +157,46 @@ public class Grid {
                 }
                 break;
         }
+
+        if (finishReached()) {
+            finish = randomCoords(); // TODO: Logic for making more maze added on? Maybe make the coords on the edge of the maze so it's smoother
+        }
     }
 
+    /**
+     * Returns whether the cell at given x and y coordinates can be moved to
+     * A cell can be moved to if it's within the bounds of the maze and hasn't already been travelled to
+     * @param x x value of cell
+     * @param y y value of cell
+     * @return true if the cell can be moved to, false if it can't be
+     */
+    private boolean isValid(int x, int y) {
+        return (x >= 0 && x < this.width) && (y >= 0 && y < this.height) && (this.grid[y][x] == null);
+    }
+
+    /**
+     * Returns if the cell reached the finish
+     * @return true if the coordinates of the player are the same as the coordinates of the finish
+     */
+    public boolean finishReached() { // public bc what if we want to use it elsewhere?
+        return Arrays.equals(current, finish);
+    }
+
+    private int[] randomCoords() {
+        int x = ThreadLocalRandom.current().nextInt(0, this.width);
+        int y = ThreadLocalRandom.current().nextInt(0, this.height);
+        return new int[]{x, y};
+    }
+
+    public Cell[][] getGrid() {
+        return grid;
+    }
+    public int getHeight() {
+        return height;
+    }
+    public int getWidth() {
+        return width;
+    }
     public int[] getPos() {
         return current;
     }

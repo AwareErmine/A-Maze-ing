@@ -42,15 +42,15 @@ public class Draw extends Application {
 
         Button startButton = new Button("Start");
         startButton.setOnAction(event -> {
-            int w = 15;
-            int h = 15;
+            int w = 10;
+            int h = 10;
             if (width.getText() != null && !width.getText().isEmpty()) {
                 w = Integer.parseInt(width.getText().replaceAll("[\\D]", ""));
-                w = (w < 3 ? 15 : w);
+                w = (w < 3 ? 10 : w);
             }
             if (height.getText() != null && !height.getText().isEmpty()) {
                 h = Integer.parseInt(height.getText().replaceAll("[\\D]", ""));
-                h = (h < 3 ? 15 : h);
+                h = (h < 3 ? 10 : h);
             }
             Grid currentMaze = new Grid(w, h);
             gameMenu(stage, currentMaze);
@@ -78,8 +78,8 @@ public class Draw extends Application {
     public static void gameMenu(Stage stage, Grid currentMaze) {
         Text title = new Text("Get Mazed!");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 22));
-
-        Canvas maze = drawMaze(currentMaze, currentMaze.getHeight() * 25, currentMaze.getWidth() * 25);
+        int cellWidth = 40; // slightly easier for changing cell widths?
+        Canvas maze = drawMaze(currentMaze, currentMaze.getHeight() * cellWidth, currentMaze.getWidth() * cellWidth, cellWidth);
         VBox v = new VBox(7, title, maze);
         v.setAlignment(Pos.CENTER);
         v.setPadding(new Insets(25));
@@ -98,7 +98,7 @@ public class Draw extends Application {
         });
     }
 
-    public static Canvas drawMaze(Grid maze, int length, int width) {
+    public static Canvas drawMaze(Grid maze, int length, int width, int cellWidth) {
         Cell[][] grid = maze.getGrid();
         int[] pos = maze.getPos();
         int[] fin = maze.getFinish();
@@ -113,38 +113,36 @@ public class Draw extends Application {
         g.strokeLine(0, 0, 0, length);
 
         boolean containsNextX, containsBelowY;
-        final int cellWidth =  25; //width/grid[0].length;
-        final int cellLength = 25; //length/grid.length;
         for (int row = 0; row < grid.length; row++) {
             for (int col = 0; col < grid[row].length; col++) {
                 // check for empty cell, ends, and whether it should be connected
-                containsBelowY = /*(grid[row][col] != null) && */ (row != grid.length - 1) && grid[row][col].getNext().contains(grid[row + 1][col]);
+                containsBelowY = (grid[row][col] != null) && (row != grid.length - 1) && grid[row][col].getNext().contains(grid[row + 1][col]);
                 containsNextX = (grid[row][col] != null) && (col != grid[row].length - 1) && grid[row][col].getNext().contains(grid[row][col + 1]);
 
                 if (fin[0] == col && fin[1] == row) {
                     g.setFill(Color.RED);
-                    g.fillRect(col * cellWidth, row * cellLength, cellWidth, cellLength);
+                    g.fillRect(col * cellWidth + 4, row * cellWidth + 4, cellWidth - 8,  cellWidth - 8);
                     g.setFill(Color.WHITE);
                 }
                 if (pos[0] == col && pos[1] == row) {
                     g.setFill(Color.GREEN);
-                    g.fillRect(col * cellWidth, row * cellLength, cellWidth, cellLength);
+                    g.fillRect(col * cellWidth + 4, row * cellWidth + 4, cellWidth - 8, cellWidth - 8);
                     g.setFill(Color.WHITE);
                 }
 
                 if (containsBelowY && containsNextX) {}
                     // don't draw anything
                 else if (containsBelowY)
-                    g.strokeLine((col+1)*cellWidth, row*cellLength,
-                            (col+1)*cellWidth, (row+1)*cellLength);
+                    g.strokeLine((col+1)*cellWidth, row*cellWidth,
+                            (col+1)*cellWidth, (row+1)*cellWidth);
                 else if (containsNextX)
-                    g.strokeLine(col*cellWidth, (row+1)*cellLength,
-                            (col+1)*cellWidth, (row+1)*cellLength);
+                    g.strokeLine(col*cellWidth, (row+1)*cellWidth,
+                            (col+1)*cellWidth, (row+1)*cellWidth);
                 else {
-                    g.strokeLine((col+1)*cellWidth, row*cellLength,
-                            (col+1)*cellWidth, (row+1)*cellLength);
-                    g.strokeLine(col*cellWidth, (row+1)*cellLength,
-                            (col+1)*cellWidth, (row+1)*cellLength);
+                    g.strokeLine((col+1)*cellWidth, row*cellWidth,
+                            (col+1)*cellWidth, (row+1)*cellWidth);
+                    g.strokeLine(col*cellWidth, (row+1)*cellWidth,
+                            (col+1)*cellWidth, (row+1)*cellWidth);
                 }
 
             }
