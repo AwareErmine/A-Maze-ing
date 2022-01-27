@@ -135,25 +135,25 @@ public class Grid {
             case 'u':
                 if (grid[current[1]][current[0]].getNext().contains(grid[current[1]-1][current[0]])) {
                     current[1] -= 1;
-                    System.out.println("up");
+//                    System.out.println("up");
                 }
                 break;
             case 'd':
                 if (grid[current[1]][current[0]].getNext().contains(grid[current[1]+1][current[0]])) {
                     current[1] += 1;
-                    System.out.println("down");
+//                    System.out.println("down");
                 }
                 break;
             case 'l':
                 if (grid[current[1]][current[0]].getNext().contains(grid[current[1]][current[0]-1])) {
                     current[0] -= 1;
-                    System.out.println("left");
+//                    System.out.println("left");
                 }
                 break;
             case 'r':
                 if (grid[current[1]][current[0]].getNext().contains(grid[current[1]][current[0]+1])) {
                     current[0] += 1;
-                    System.out.println("right");
+//                    System.out.println("right");
                 }
                 break;
         }

@@ -18,6 +18,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
+
 public class Draw extends Application {
     public static void init(String[] args) {
         Application.launch(args);
@@ -80,6 +82,7 @@ public class Draw extends Application {
         title.setFont(Font.font("Arial", FontWeight.BOLD, 22));
         int cellWidth = 40; // slightly easier for changing cell widths?
         Canvas maze = drawMaze(currentMaze, currentMaze.getHeight() * cellWidth, currentMaze.getWidth() * cellWidth, cellWidth);
+        GraphicsContext g = maze.getGraphicsContext2D();
         VBox v = new VBox(7, title, maze);
         v.setAlignment(Pos.CENTER);
         v.setPadding(new Insets(25));
@@ -88,13 +91,19 @@ public class Draw extends Application {
         stage.show();
 
         s.setOnKeyPressed(event -> {
+            int[] beforeKeyPressed = currentMaze.getPos();
             switch (event.getCode()) {
                 case LEFT -> currentMaze.move('l');
                 case RIGHT -> currentMaze.move('r');
                 case UP -> currentMaze.move('u');
                 case DOWN -> currentMaze.move('d');
             }
-            gameMenu(stage, currentMaze);
+            int[] afterKeyPressed = currentMaze.getPos();
+            if (!Arrays.equals(beforeKeyPressed, afterKeyPressed)) {
+                g.fillRect(afterKeyPressed[1] * cellWidth + 4, afterKeyPressed[0] * cellWidth + 4, cellWidth - 8,  cellWidth - 8);
+                // draw where they are now if it's not where they were before the key press
+            }
+//            gameMenu(stage, currentMaze);
         });
     }
 
