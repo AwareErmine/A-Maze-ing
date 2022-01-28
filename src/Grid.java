@@ -130,33 +130,35 @@ public class Grid {
     }
 
     public void move(char direction) {
-        System.out.println("called");
+//        System.out.println("called");
         switch (direction) {
             case 'u':
                 if (grid[current[1]][current[0]].getNext().contains(grid[current[1]-1][current[0]])) {
-                    current[1] -= 1;
+                    this.current[1] -= 1;
 //                    System.out.println("up");
                 }
                 break;
             case 'd':
                 if (grid[current[1]][current[0]].getNext().contains(grid[current[1]+1][current[0]])) {
-                    current[1] += 1;
+                    this.current[1] += 1;
 //                    System.out.println("down");
                 }
                 break;
             case 'l':
                 if (grid[current[1]][current[0]].getNext().contains(grid[current[1]][current[0]-1])) {
-                    current[0] -= 1;
+                    this.current[0] -= 1;
 //                    System.out.println("left");
                 }
                 break;
             case 'r':
                 if (grid[current[1]][current[0]].getNext().contains(grid[current[1]][current[0]+1])) {
-                    current[0] += 1;
+                    this.current[0] += 1;
 //                    System.out.println("right");
                 }
                 break;
         }
+
+        System.out.println(Arrays.toString(this.current));
 
         if (finishReached()) {
             finish = randomCoords(); // TODO: Logic for making more maze added on? Maybe make the coords on the edge of the maze so it's smoother
