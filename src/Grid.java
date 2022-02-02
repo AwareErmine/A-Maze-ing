@@ -158,7 +158,7 @@ public class Grid {
                 break;
         }
 
-        System.out.println(Arrays.toString(this.current));
+//        System.out.println("IN MOVE: " + Arrays.toString(this.current));
 
         if (finishReached()) {
             finish = randomCoords(); // TODO: Logic for making more maze added on? Maybe make the coords on the edge of the maze so it's smoother
@@ -200,7 +200,7 @@ public class Grid {
         return width;
     }
     public int[] getPos() {
-        return current;
+        return new int[]{this.current[0], this.current[1]};
     }
     public int[] getFinish() {
         return finish;

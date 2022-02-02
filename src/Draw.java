@@ -99,21 +99,13 @@ public class Draw extends Application {
                 case DOWN -> currentMaze.move('d');
             }
             int[] afterKeyPressed = currentMaze.getPos();
+
             if (!Arrays.equals(beforeKeyPressed, afterKeyPressed)) {
-                g.setFill(Color.GREEN);
-                g.fillRect(afterKeyPressed[0] * cellWidth + 4, afterKeyPressed[1] * cellWidth + 4, cellWidth - 8,  cellWidth - 8);
                 g.setFill(Color.WHITE);
                 g.fillRect(beforeKeyPressed[0] * cellWidth + 4, beforeKeyPressed[1] * cellWidth + 4, cellWidth - 8,  cellWidth - 8);
-                System.out.println("Moved");
-//                stage.setScene(s);
-//                stage.show();
-                // draw where they are now if it's not where they were before the key press
-            } else {
-                System.out.println(Arrays.toString(beforeKeyPressed));
-                System.out.println(Arrays.toString(afterKeyPressed));
+                g.setFill(Color.GREEN);
+                g.fillRect(afterKeyPressed[0] * cellWidth + 4, afterKeyPressed[1] * cellWidth + 4, cellWidth - 8,  cellWidth - 8);
             }
-            stage.show();
-//            gameMenu(stage, currentMaze);
         });
     }
 
